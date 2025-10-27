@@ -1,0 +1,13 @@
+{
+  "company": "Tencent",
+  "ticker": "0700.HK",
+  "prices": {
+    "2025-10-24": 370.5,
+    "2025-10-27": 375.0
+  },
+  "tags": [
+    "tech",
+    "internet",
+    "hk"
+  ]
+}
