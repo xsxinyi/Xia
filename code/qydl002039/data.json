@@ -1,8 +1,9 @@
 {
-  "expected_rate": 0.08,
+  "expected_rate": 0.06,
   "2015": {
     "cash_and_cash_equivalents": 2.38,
     "total_liabilities": 139.34,
+    "generation_output": 101.04,
     "operating_revenue": 27.00,
     "operating_cost": 11.71,
     "taxes_and_surcharges": 0.38,
@@ -19,11 +20,70 @@
     "total_cash_outflow_operating_activities": 8.14,
     "net_cash_flow_operating": 20.84,
     "net_cash_flow_investing": -4.75,
-    "total_dividends_paid": 1.53
+    "total_dividends_paid": 1.53,
+    "subsidiaries": {
+      "puding": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 87.0
+      },
+      "yinzidu": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 360.0
+      },
+      "beipanjiang": {
+        "shareholding_ratio": 51.0,
+        "guangzhao": {
+          "generation_output": 26.34,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 1040.0
+        },
+        "dongjing": {
+          "generation_output": 34.57,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 880.0
+        },
+        "mamaya": {
+          "generation_output": 15.89,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 558.0
+        }
+      },
+      "xiyuan": {
+        "shareholding_ratio": 30.0,
+        "shannipo": {
+          "generation_output": 7.08,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 185.5
+        }
+      },
+      "beiyuan": {
+        "shareholding_ratio": 58.66,
+        "yutang": {
+          "generation_output": 2.82,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 75.0
+        },
+        "qingxi": {
+          "generation_output": 0.80,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 28.0
+        },
+        "niudu": {
+          "generation_output": 0.62,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 20.0
+        }
+      }
+    }
   },
   "2016": {
     "cash_and_cash_equivalents": 2.58,
     "total_liabilities": 133.15,
+    "generation_output": 74.33,
     "operating_revenue": 19.18,
     "operating_cost": 9.71,
     "taxes_and_surcharges": 0.30,
@@ -45,6 +105,7 @@
   "2017": {
     "cash_and_cash_equivalents": 1.36,
     "total_liabilities": 126.97,
+    "generation_output": "NA",
     "operating_revenue": 24.19,
     "operating_cost": 11.64,
     "taxes_and_surcharges": 0.39,
@@ -66,6 +127,7 @@
   "2018": {
     "cash_and_cash_equivalents": 3.25,
     "total_liabilities": 119.43,
+    "generation_output": 91.19,
     "operating_revenue": 23.89,
     "operating_cost": 11.80,
     "taxes_and_surcharges": 0.36,
@@ -87,6 +149,7 @@
   "2019": {
     "cash_and_cash_equivalents": 1.63,
     "total_liabilities": 104.8,
+    "generation_output": "NA",
     "operating_revenue": 21.74,
     "operating_cost": 10.59,
     "taxes_and_surcharges": 0.28,
@@ -108,6 +171,7 @@
   "2020": {
     "cash_and_cash_equivalents": 1.63,
     "total_liabilities": 108.75,
+    "generation_output": "NA",
     "operating_revenue": 26.51,
     "operating_cost": 12.68,
     "taxes_and_surcharges": 0.34,
@@ -129,6 +193,7 @@
   "2021": {
     "cash_and_cash_equivalents": 2.40,
     "total_liabilities": 111.72,
+    "generation_output": "NA",
     "operating_revenue": 20.36,
     "operating_cost": 9.42,
     "taxes_and_surcharges": 0.24,
@@ -150,6 +215,7 @@
   "2022": {
     "cash_and_cash_equivalents": 2.26,
     "total_liabilities": 103.45,
+    "generation_output": "NA",
     "operating_revenue": 26.13,
     "operating_cost": 11.52,
     "taxes_and_surcharges": 0.31,
@@ -171,6 +237,7 @@
   "2023": {
     "cash_and_cash_equivalents": 2.53,
     "total_liabilities": 93.69,
+    "generation_output": "NA",
     "operating_revenue": 19.90,
     "operating_cost": 9.63,
     "taxes_and_surcharges": 0.23,
@@ -192,6 +259,7 @@
   "2024": {
     "cash_and_cash_equivalents": 1.73,
     "total_liabilities": 87.38,
+    "generation_output": "NA",
     "operating_revenue": 19.33,
     "operating_cost": 9.73,
     "taxes_and_surcharges": 0.25,
