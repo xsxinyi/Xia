@@ -4,6 +4,7 @@
     "cash_and_cash_equivalents": 2.38,
     "total_liabilities": 139.34,
     "generation_output": 101.04,
+    "avg_on_grid_price": "NA",
     "operating_revenue": 27.00,
     "operating_cost": 11.71,
     "taxes_and_surcharges": 0.38,
@@ -84,6 +85,7 @@
     "cash_and_cash_equivalents": 2.58,
     "total_liabilities": 133.15,
     "generation_output": 74.33,
+    "avg_on_grid_price": "NA",
     "operating_revenue": 19.18,
     "operating_cost": 9.71,
     "taxes_and_surcharges": 0.30,
@@ -100,12 +102,71 @@
     "total_cash_outflow_operating_activities": 7.89,
     "net_cash_flow_operating": 19.72,
     "net_cash_flow_investing": -3.71,
-    "total_dividends_paid": 0.92
+    "total_dividends_paid": 0.92,
+    "subsidiaries": {
+      "puding": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 87.0
+      },
+      "yinzidu": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 360.0
+      },
+      "beipanjiang": {
+        "shareholding_ratio": 51.0,
+        "guangzhao": {
+          "generation_output": 17.98,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 1040.0
+        },
+        "dongjing": {
+          "generation_output": 24.81,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 880.0
+        },
+        "mamaya": {
+          "generation_output": 11.92,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 558.0
+        }
+      },
+      "xiyuan": {
+        "shareholding_ratio": 30.0,
+        "shannipo": {
+          "generation_output": 7.11,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 185.5
+        }
+      },
+      "beiyuan": {
+        "shareholding_ratio": 58.66,
+        "yutang": {
+          "generation_output": 3.37,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 75.0
+        },
+        "qingxi": {
+          "generation_output": 1.09,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 28.0
+        },
+        "niudu": {
+          "generation_output": 0.64,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 20.0
+        }
+      }
+    }
   },
   "2017": {
     "cash_and_cash_equivalents": 1.36,
     "total_liabilities": 126.97,
-    "generation_output": "NA",
+    "generation_output": 92.29,
+    "avg_on_grid_price": "NA",
     "operating_revenue": 24.19,
     "operating_cost": 11.64,
     "taxes_and_surcharges": 0.39,
@@ -122,12 +183,71 @@
     "total_cash_outflow_operating_activities": 9.43,
     "net_cash_flow_operating": 15.84,
     "net_cash_flow_investing": -2.09,
-    "total_dividends_paid": 0.92
+    "total_dividends_paid": 0.92,
+        "subsidiaries": {
+      "puding": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 87.0
+      },
+      "yinzidu": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 360.0
+      },
+      "beipanjiang": {
+        "shareholding_ratio": 51.0,
+        "guangzhao": {
+          "generation_output": 25.59,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 1040.0
+        },
+        "dongjing": {
+          "generation_output": 29.32,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 880.0
+        },
+        "mamaya": {
+          "generation_output": 14.50,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 558.0
+        }
+      },
+      "xiyuan": {
+        "shareholding_ratio": 30.0,
+        "shannipo": {
+          "generation_output": 6.75,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 185.5
+        }
+      },
+      "beiyuan": {
+        "shareholding_ratio": 58.66,
+        "yutang": {
+          "generation_output": 2.69,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 75.0
+        },
+        "qingxi": {
+          "generation_output": 0.82,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 28.0
+        },
+        "niudu": {
+          "generation_output": 0.50,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 20.0
+        }
+      }
+    }
   },
   "2018": {
     "cash_and_cash_equivalents": 3.25,
     "total_liabilities": 119.43,
     "generation_output": 91.19,
+    "avg_on_grid_price": "NA",
     "operating_revenue": 23.89,
     "operating_cost": 11.80,
     "taxes_and_surcharges": 0.36,
@@ -144,12 +264,71 @@
     "total_cash_outflow_operating_activities": 8.44,
     "net_cash_flow_operating": 18.18,
     "net_cash_flow_investing": -1.82,
-    "total_dividends_paid": 0.92
+    "total_dividends_paid": 0.92,
+        "subsidiaries": {
+      "puding": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 87.0
+      },
+      "yinzidu": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 360.0
+      },
+      "beipanjiang": {
+        "shareholding_ratio": 51.0,
+        "guangzhao": {
+          "generation_output": 22.48,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 1040.0
+        },
+        "dongjing": {
+          "generation_output": 29.66,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 880.0
+        },
+        "mamaya": {
+          "generation_output": 14.14,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 558.0
+        }
+      },
+      "xiyuan": {
+        "shareholding_ratio": 30.0,
+        "shannipo": {
+          "generation_output": 6.97,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 185.5
+        }
+      },
+      "beiyuan": {
+        "shareholding_ratio": 58.66,
+        "yutang": {
+          "generation_output": 2.87,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 75.0
+        },
+        "qingxi": {
+          "generation_output": 0.80,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 28.0
+        },
+        "niudu": {
+          "generation_output": 0.48,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 20.0
+        }
+      }
+    }
   },
   "2019": {
     "cash_and_cash_equivalents": 1.63,
     "total_liabilities": 104.8,
-    "generation_output": "NA",
+    "generation_output": 81.9,
+    "avg_on_grid_price": 0.2947,
     "operating_revenue": 21.74,
     "operating_cost": 10.59,
     "taxes_and_surcharges": 0.28,
@@ -166,12 +345,71 @@
     "total_cash_outflow_operating_activities": 8.28,
     "net_cash_flow_operating": 19.75,
     "net_cash_flow_investing": -0.69,
-    "total_dividends_paid": 1.01
+    "total_dividends_paid": 1.01,
+        "subsidiaries": {
+      "puding": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 87.0
+      },
+      "yinzidu": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 360.0
+      },
+      "beipanjiang": {
+        "shareholding_ratio": 51.0,
+        "guangzhao": {
+          "generation_output": 18.63,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 1040.0
+        },
+        "dongjing": {
+          "generation_output": 28.07,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 880.0
+        },
+        "mamaya": {
+          "generation_output": 12.54,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 558.0
+        }
+      },
+      "xiyuan": {
+        "shareholding_ratio": 30.0,
+        "shannipo": {
+          "generation_output": 6.52,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 185.5
+        }
+      },
+      "beiyuan": {
+        "shareholding_ratio": 58.66,
+        "yutang": {
+          "generation_output": 2.96,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 75.0
+        },
+        "qingxi": {
+          "generation_output": 0.92,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 28.0
+        },
+        "niudu": {
+          "generation_output": 0.61,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 20.0
+        }
+      }
+    }
   },
   "2020": {
     "cash_and_cash_equivalents": 1.63,
     "total_liabilities": 108.75,
-    "generation_output": "NA",
+    "generation_output": 103.39,
+    "avg_on_grid_price": 0.2882,
     "operating_revenue": 26.51,
     "operating_cost": 12.68,
     "taxes_and_surcharges": 0.34,
@@ -188,12 +426,71 @@
     "total_cash_outflow_operating_activities": 8.73,
     "net_cash_flow_operating": 21.60,
     "net_cash_flow_investing": -17.96,
-    "total_dividends_paid": 1.10
+    "total_dividends_paid": 1.10,
+        "subsidiaries": {
+      "puding": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 87.0
+      },
+      "yinzidu": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 360.0
+      },
+      "beipanjiang": {
+        "shareholding_ratio": 51.0,
+        "guangzhao": {
+          "generation_output": 26.06,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 1040.0
+        },
+        "dongjing": {
+          "generation_output": 33.67,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 880.0
+        },
+        "mamaya": {
+          "generation_output": 15.88,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 558.0
+        }
+      },
+      "xiyuan": {
+        "shareholding_ratio": 30.0,
+        "shannipo": {
+          "generation_output": 7.06,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 185.5
+        }
+      },
+      "beiyuan": {
+        "shareholding_ratio": 58.66,
+        "yutang": {
+          "generation_output": 3.38,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 75.0
+        },
+        "qingxi": {
+          "generation_output": 1.15,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 28.0
+        },
+        "niudu": {
+          "generation_output": 0.77,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 20.0
+        }
+      }
+    }
   },
   "2021": {
     "cash_and_cash_equivalents": 2.40,
     "total_liabilities": 111.72,
-    "generation_output": "NA",
+    "generation_output": 77.83,
+    "avg_on_grid_price": 0.2980,
     "operating_revenue": 20.36,
     "operating_cost": 9.42,
     "taxes_and_surcharges": 0.24,
@@ -210,12 +507,71 @@
     "total_cash_outflow_operating_activities": 8.43,
     "net_cash_flow_operating": 13.06,
     "net_cash_flow_investing": -5.54,
-    "total_dividends_paid": 0.61
+    "total_dividends_paid": 0.61,
+        "subsidiaries": {
+      "puding": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 87.0
+      },
+      "yinzidu": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 360.0
+      },
+      "beipanjiang": {
+        "shareholding_ratio": 51.0,
+        "guangzhao": {
+          "generation_output": 18.40,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 1040.0
+        },
+        "dongjing": {
+          "generation_output": 23.49,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 880.0
+        },
+        "mamaya": {
+          "generation_output": 11.64,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 558.0
+        }
+      },
+      "xiyuan": {
+        "shareholding_ratio": 30.0,
+        "shannipo": {
+          "generation_output": 6.65,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 185.5
+        }
+      },
+      "beiyuan": {
+        "shareholding_ratio": 58.66,
+        "yutang": {
+          "generation_output": 3.10,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 75.0
+        },
+        "qingxi": {
+          "generation_output": 0.90,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 28.0
+        },
+        "niudu": {
+          "generation_output": 0.58,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 20.0
+        }
+      }
+    }
   },
   "2022": {
     "cash_and_cash_equivalents": 2.26,
     "total_liabilities": 103.45,
-    "generation_output": "NA",
+    "generation_output": 95.06,
+    "avg_on_grid_price": 0.3092,
     "operating_revenue": 26.13,
     "operating_cost": 11.52,
     "taxes_and_surcharges": 0.31,
@@ -232,12 +588,71 @@
     "total_cash_outflow_operating_activities": 11.22,
     "net_cash_flow_operating": 19.46,
     "net_cash_flow_investing": -6.73,
-    "total_dividends_paid": 1.28
+    "total_dividends_paid": 1.28,
+        "subsidiaries": {
+      "puding": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 87.0
+      },
+      "yinzidu": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 360.0
+      },
+      "beipanjiang": {
+        "shareholding_ratio": 51.0,
+        "guangzhao": {
+          "generation_output": 23.68,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 1040.0
+        },
+        "dongjing": {
+          "generation_output": 30.31,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 880.0
+        },
+        "mamaya": {
+          "generation_output": 14.57,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 558.0
+        }
+      },
+      "xiyuan": {
+        "shareholding_ratio": 30.0,
+        "shannipo": {
+          "generation_output": 7.63,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 185.5
+        }
+      },
+      "beiyuan": {
+        "shareholding_ratio": 58.66,
+        "yutang": {
+          "generation_output": 2.10,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 75.0
+        },
+        "qingxi": {
+          "generation_output": 0.56,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 28.0
+        },
+        "niudu": {
+          "generation_output": 0.31,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 20.0
+        }
+      }
+    }
   },
   "2023": {
     "cash_and_cash_equivalents": 2.53,
     "total_liabilities": 93.69,
-    "generation_output": "NA",
+    "generation_output": 68.83,
+    "avg_on_grid_price": 0.3249,
     "operating_revenue": 19.90,
     "operating_cost": 9.63,
     "taxes_and_surcharges": 0.23,
@@ -254,12 +669,71 @@
     "total_cash_outflow_operating_activities": 8.88,
     "net_cash_flow_operating": 18.06,
     "net_cash_flow_investing": -2.21,
-    "total_dividends_paid": 0.81
+    "total_dividends_paid": 0.81,
+        "subsidiaries": {
+      "puding": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 87.0
+      },
+      "yinzidu": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 360.0
+      },
+      "beipanjiang": {
+        "shareholding_ratio": 51.0,
+        "guangzhao": {
+          "generation_output": 16.29,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 1040.0
+        },
+        "dongjing": {
+          "generation_output": 18.71,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 880.0
+        },
+        "mamaya": {
+          "generation_output": 9.14,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 558.0
+        }
+      },
+      "xiyuan": {
+        "shareholding_ratio": 30.0,
+        "shannipo": {
+          "generation_output": 4.68,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 185.5
+        }
+      },
+      "beiyuan": {
+        "shareholding_ratio": 58.66,
+        "yutang": {
+          "generation_output": 1.52,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 75.0
+        },
+        "qingxi": {
+          "generation_output": 0.29,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 28.0
+        },
+        "niudu": {
+          "generation_output": 0.25,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 20.0
+        }
+      }
+    }
   },
   "2024": {
     "cash_and_cash_equivalents": 1.73,
     "total_liabilities": 87.38,
-    "generation_output": "NA",
+    "generation_output": 69.86,
+    "avg_on_grid_price": 0.3108,
     "operating_revenue": 19.33,
     "operating_cost": 9.73,
     "taxes_and_surcharges": 0.25,
@@ -276,6 +750,64 @@
     "total_cash_outflow_operating_activities": 9.47,
     "net_cash_flow_operating": 12.57,
     "net_cash_flow_investing": -1.66,
-    "total_dividends_paid": 0.68
+    "total_dividends_paid": 0.68,
+        "subsidiaries": {
+      "puding": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 87.0
+      },
+      "yinzidu": {
+        "shareholding_ratio": 100.0,
+        "generation_output": "NA",
+        "on_grid_price": "NA",
+        "installed_capacity_mw": 360.0
+      },
+      "beipanjiang": {
+        "shareholding_ratio": 51.0,
+        "guangzhao": {
+          "generation_output": 13.31,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 1040.0
+        },
+        "dongjing": {
+          "generation_output": 21.26,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 880.0
+        },
+        "mamaya": {
+          "generation_output": 9.35,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 558.0
+        }
+      },
+      "xiyuan": {
+        "shareholding_ratio": 30.0,
+        "shannipo": {
+          "generation_output": 5.15,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 185.5
+        }
+      },
+      "beiyuan": {
+        "shareholding_ratio": 58.66,
+        "yutang": {
+          "generation_output": 2.32,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 75.0
+        },
+        "qingxi": {
+          "generation_output": 0.75,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 28.0
+        },
+        "niudu": {
+          "generation_output": 0.49,
+          "on_grid_price": "NA",
+          "installed_capacity_mw": 20.0
+        }
+      }
+    }
   }
 }
