@@ -885,5 +885,9 @@
         }
       }
     }
+  },
+  "curr": {
+    "cash_and_cash_equivalents": 3.09,
+    "total_liabilities": 80.50
   }
 }
