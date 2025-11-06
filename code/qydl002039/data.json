@@ -697,31 +697,31 @@
     "subsidiaries": {
       "puding": {
         "shareholding_ratio": 100.0,
-        "generation_output": "NA",
-        "on_grid_price": "NA",
+        "generation_output": 3.10,
+        "on_grid_price": 0.2848,
         "installed_capacity_mw": 87.0
       },
       "yinzidu": {
         "shareholding_ratio": 100.0,
-        "generation_output": "NA",
-        "on_grid_price": "NA",
+        "generation_output": 7.28,
+        "on_grid_price": 0.2901,
         "installed_capacity_mw": 360.0
       },
       "beipanjiang": {
         "shareholding_ratio": 51.0,
         "guangzhao": {
           "generation_output": 16.29,
-          "on_grid_price": "NA",
+          "on_grid_price": 0.3049,
           "installed_capacity_mw": 1040.0
         },
         "dongjing": {
           "generation_output": 18.71,
-          "on_grid_price": "NA",
+          "on_grid_price": 0.3176,
           "installed_capacity_mw": 880.0
         },
         "mamaya": {
           "generation_output": 9.14,
-          "on_grid_price": "NA",
+          "on_grid_price": 0.3176,
           "installed_capacity_mw": 558.0
         }
       },
@@ -729,7 +729,7 @@
         "shareholding_ratio": 30.0,
         "shannipo": {
           "generation_output": 4.68,
-          "on_grid_price": "NA",
+          "on_grid_price": 0.2848,
           "installed_capacity_mw": 185.5
         }
       },
@@ -737,18 +737,40 @@
         "shareholding_ratio": 58.66,
         "yutang": {
           "generation_output": 1.52,
-          "on_grid_price": "NA",
+          "on_grid_price": 0.2654,
           "installed_capacity_mw": 75.0
         },
         "qingxi": {
           "generation_output": 0.29,
-          "on_grid_price": "NA",
+          "on_grid_price": 0.2744,
           "installed_capacity_mw": 28.0
         },
         "niudu": {
           "generation_output": 0.25,
-          "on_grid_price": "NA",
+          "on_grid_price": 0.2600,
           "installed_capacity_mw": 20.0
+        }
+      },
+      "pv_power_plant": {
+        "guangzhao_pv": {
+          "generation_output": 3.18,
+          "on_grid_price": 0.3928,
+          "installed_capacity_mw": 300.0
+        },
+        "mamaya_pv": {
+          "generation_output": 3.23,
+          "on_grid_price": 0.3928,
+          "installed_capacity_mw": 300.0
+        },
+        "dongjing_pv": {
+          "generation_output": 1.49,
+          "on_grid_price": 0.3515,
+          "installed_capacity_mw": 150.0
+        },
+        "zhenningbeicao_pv": {
+          "generation_output": 0.31,
+          "on_grid_price": 0.35,
+          "installed_capacity_mw": 155.0
         }
       }
     }
@@ -786,13 +808,13 @@
     "subsidiaries": {
       "puding": {
         "shareholding_ratio": 100.0,
-        "generation_output": "NA",
+        "generation_output": 3.03,
         "on_grid_price": 0.2848,
         "installed_capacity_mw": 87.0
       },
       "yinzidu": {
         "shareholding_ratio": 100.0,
-        "generation_output": "NA",
+        "generation_output": 7.65,
         "on_grid_price": 0.2901,
         "installed_capacity_mw": 360.0
       },
@@ -838,6 +860,28 @@
           "generation_output": 0.49,
           "on_grid_price": 0.2600,
           "installed_capacity_mw": 20.0
+        }
+      },
+      "pv_power_plant": {
+        "guangzhao_pv": {
+          "generation_output": 2.71,
+          "on_grid_price": 0.3928,
+          "installed_capacity_mw": 300.0
+        },
+        "mamaya_pv": {
+          "generation_output": 2.59,
+          "on_grid_price": 0.3928,
+          "installed_capacity_mw": 300.0
+        },
+        "dongjing_pv": {
+          "generation_output": 1.32,
+          "on_grid_price": 0.3515,
+          "installed_capacity_mw": 150.0
+        },
+        "zhenningbeicao_pv": {
+          "generation_output": 0.59,
+          "on_grid_price": 0.35,
+          "installed_capacity_mw": 155.0
         }
       }
     }
