@@ -184,7 +184,7 @@
     "net_cash_flow_operating": 15.84,
     "net_cash_flow_investing": -2.09,
     "total_dividends_paid": 0.92,
-        "subsidiaries": {
+    "subsidiaries": {
       "puding": {
         "shareholding_ratio": 100.0,
         "generation_output": "NA",
@@ -265,7 +265,7 @@
     "net_cash_flow_operating": 18.18,
     "net_cash_flow_investing": -1.82,
     "total_dividends_paid": 0.92,
-        "subsidiaries": {
+    "subsidiaries": {
       "puding": {
         "shareholding_ratio": 100.0,
         "generation_output": "NA",
@@ -346,7 +346,7 @@
     "net_cash_flow_operating": 19.75,
     "net_cash_flow_investing": -0.69,
     "total_dividends_paid": 1.01,
-        "subsidiaries": {
+    "subsidiaries": {
       "puding": {
         "shareholding_ratio": 100.0,
         "generation_output": "NA",
@@ -427,7 +427,7 @@
     "net_cash_flow_operating": 21.60,
     "net_cash_flow_investing": -17.96,
     "total_dividends_paid": 1.10,
-        "subsidiaries": {
+    "subsidiaries": {
       "puding": {
         "shareholding_ratio": 100.0,
         "generation_output": "NA",
@@ -508,7 +508,15 @@
     "net_cash_flow_operating": 13.06,
     "net_cash_flow_investing": -5.54,
     "total_dividends_paid": 0.61,
-        "subsidiaries": {
+    "revenue_composition": {
+      "total_sales_volume_100m_kwh": 77.83,
+      "hydro_sales_volume_100m_kwh": 73.64,
+      "pv_sales_volume_100m_kwh": 3.19,
+      "avg_price_yuan_per_kwh": 0.2979,
+      "hydro_price_yuan_per_kwh": 0.2932,
+      "pv_price_yuan_per_kwh": 0.4062
+    },
+    "subsidiaries": {
       "puding": {
         "shareholding_ratio": 100.0,
         "generation_output": "NA",
@@ -589,7 +597,15 @@
     "net_cash_flow_operating": 19.46,
     "net_cash_flow_investing": -6.73,
     "total_dividends_paid": 1.28,
-        "subsidiaries": {
+    "revenue_composition": {
+      "total_sales_volume_100m_kwh": 95.06,
+      "hydro_sales_volume_100m_kwh": 87.77,
+      "pv_sales_volume_100m_kwh": 7.29,
+      "avg_price_yuan_per_kwh": 0.3092,
+      "hydro_price_yuan_per_kwh": 0.3047,
+      "pv_price_yuan_per_kwh": 0.3628
+    },
+    "subsidiaries": {
       "puding": {
         "shareholding_ratio": 100.0,
         "generation_output": "NA",
@@ -670,7 +686,15 @@
     "net_cash_flow_operating": 18.06,
     "net_cash_flow_investing": -2.21,
     "total_dividends_paid": 0.81,
-        "subsidiaries": {
+    "revenue_composition": {
+      "total_sales_volume_100m_kwh": 68.83,
+      "hydro_sales_volume_100m_kwh": 60.70,
+      "pv_sales_volume_100m_kwh": 8.13,
+      "avg_price_yuan_per_kwh": 0.3249,
+      "hydro_price_yuan_per_kwh": 0.3166,
+      "pv_price_yuan_per_kwh": 0.3868
+    },
+    "subsidiaries": {
       "puding": {
         "shareholding_ratio": 100.0,
         "generation_output": "NA",
@@ -751,34 +775,42 @@
     "net_cash_flow_operating": 12.57,
     "net_cash_flow_investing": -1.66,
     "total_dividends_paid": 0.68,
-        "subsidiaries": {
+    "revenue_composition": {
+      "total_sales_volume_100m_kwh": 69.86,
+      "hydro_sales_volume_100m_kwh": 62.73,
+      "pv_sales_volume_100m_kwh": 7.13,
+      "avg_price_yuan_per_kwh": 0.3108,
+      "hydro_price_yuan_per_kwh": 0.3052,
+      "pv_price_yuan_per_kwh": 0.3603
+    },
+    "subsidiaries": {
       "puding": {
         "shareholding_ratio": 100.0,
         "generation_output": "NA",
-        "on_grid_price": "NA",
+        "on_grid_price": 0.2848,
         "installed_capacity_mw": 87.0
       },
       "yinzidu": {
         "shareholding_ratio": 100.0,
         "generation_output": "NA",
-        "on_grid_price": "NA",
+        "on_grid_price": 0.2901,
         "installed_capacity_mw": 360.0
       },
       "beipanjiang": {
         "shareholding_ratio": 51.0,
         "guangzhao": {
           "generation_output": 13.31,
-          "on_grid_price": "NA",
+          "on_grid_price": 0.3049,
           "installed_capacity_mw": 1040.0
         },
         "dongjing": {
           "generation_output": 21.26,
-          "on_grid_price": "NA",
+          "on_grid_price": 0.3176,
           "installed_capacity_mw": 880.0
         },
         "mamaya": {
           "generation_output": 9.35,
-          "on_grid_price": "NA",
+          "on_grid_price": 0.3176,
           "installed_capacity_mw": 558.0
         }
       },
@@ -786,7 +818,7 @@
         "shareholding_ratio": 30.0,
         "shannipo": {
           "generation_output": 5.15,
-          "on_grid_price": "NA",
+          "on_grid_price": 0.2848,
           "installed_capacity_mw": 185.5
         }
       },
@@ -794,17 +826,17 @@
         "shareholding_ratio": 58.66,
         "yutang": {
           "generation_output": 2.32,
-          "on_grid_price": "NA",
+          "on_grid_price": 0.2654,
           "installed_capacity_mw": 75.0
         },
         "qingxi": {
           "generation_output": 0.75,
-          "on_grid_price": "NA",
+          "on_grid_price": 0.2744,
           "installed_capacity_mw": 28.0
         },
         "niudu": {
           "generation_output": 0.49,
-          "on_grid_price": "NA",
+          "on_grid_price": 0.2600,
           "installed_capacity_mw": 20.0
         }
       }
