@@ -22,6 +22,12 @@
     "net_cash_flow_operating": 20.84,
     "net_cash_flow_investing": -4.75,
     "total_dividends_paid": 1.53,
+    "parent_company ": {
+      "cash_and_cash_equivalents": 0.71,
+      "total_liabilities": 12.93,
+      "operating_revenue": 3.21,
+      "net_cash_flow_operating": 1.76
+    },
     "subsidiaries": {
       "puding": {
         "shareholding_ratio": 100.0,
@@ -103,6 +109,12 @@
     "net_cash_flow_operating": 19.72,
     "net_cash_flow_investing": -3.71,
     "total_dividends_paid": 0.92,
+    "parent_company ": {
+      "cash_and_cash_equivalents": 3.13,
+      "total_liabilities": 10.83,
+      "operating_revenue": 1.90,
+      "net_cash_flow_operating": 1.65
+    },
     "subsidiaries": {
       "puding": {
         "shareholding_ratio": 100.0,
@@ -184,6 +196,12 @@
     "net_cash_flow_operating": 15.84,
     "net_cash_flow_investing": -2.09,
     "total_dividends_paid": 0.92,
+    "parent_company ": {
+      "cash_and_cash_equivalents": 0.40,
+      "total_liabilities": 11.51,
+      "operating_revenue": 2.92,
+      "net_cash_flow_operating": 1.44
+    },
     "subsidiaries": {
       "puding": {
         "shareholding_ratio": 100.0,
@@ -265,6 +283,12 @@
     "net_cash_flow_operating": 18.18,
     "net_cash_flow_investing": -1.82,
     "total_dividends_paid": 0.92,
+    "parent_company ": {
+      "cash_and_cash_equivalents": 1.04,
+      "total_liabilities": 10.12,
+      "operating_revenue": 3.47,
+      "net_cash_flow_operating": 1.97
+    },
     "subsidiaries": {
       "puding": {
         "shareholding_ratio": 100.0,
@@ -346,6 +370,12 @@
     "net_cash_flow_operating": 19.75,
     "net_cash_flow_investing": -0.69,
     "total_dividends_paid": 1.01,
+    "parent_company ": {
+      "cash_and_cash_equivalents": 0.87,
+      "total_liabilities": 7.47,
+      "operating_revenue": 3.31,
+      "net_cash_flow_operating": 2.11
+    },
     "subsidiaries": {
       "puding": {
         "shareholding_ratio": 100.0,
@@ -427,6 +457,12 @@
     "net_cash_flow_operating": 21.60,
     "net_cash_flow_investing": -17.96,
     "total_dividends_paid": 1.10,
+    "parent_company ": {
+      "cash_and_cash_equivalents": 0.43,
+      "total_liabilities": 4.52,
+      "operating_revenue": 3.93,
+      "net_cash_flow_operating": 2.83
+    },
     "subsidiaries": {
       "puding": {
         "shareholding_ratio": 100.0,
@@ -508,6 +544,12 @@
     "net_cash_flow_operating": 13.06,
     "net_cash_flow_investing": -5.54,
     "total_dividends_paid": 0.61,
+    "parent_company ": {
+      "cash_and_cash_equivalents": 0.95,
+      "total_liabilities": 4.58,
+      "operating_revenue": 2.40,
+      "net_cash_flow_operating": 1.23
+    },
     "revenue_composition": {
       "total_sales_volume_100m_kwh": 77.83,
       "hydro_sales_volume_100m_kwh": 73.64,
@@ -597,6 +639,12 @@
     "net_cash_flow_operating": 19.46,
     "net_cash_flow_investing": -6.73,
     "total_dividends_paid": 1.28,
+    "parent_company ": {
+      "cash_and_cash_equivalents": 0.18,
+      "total_liabilities": 3.81,
+      "operating_revenue": 2.45,
+      "net_cash_flow_operating": 1.53
+    },
     "revenue_composition": {
       "total_sales_volume_100m_kwh": 95.06,
       "hydro_sales_volume_100m_kwh": 87.77,
@@ -686,6 +734,12 @@
     "net_cash_flow_operating": 18.06,
     "net_cash_flow_investing": -2.21,
     "total_dividends_paid": 0.81,
+    "parent_company ": {
+      "cash_and_cash_equivalents": 0.75,
+      "total_liabilities": 3.91,
+      "operating_revenue": 2.78,
+      "net_cash_flow_operating": 1.32
+    },
     "revenue_composition": {
       "total_sales_volume_100m_kwh": 68.83,
       "hydro_sales_volume_100m_kwh": 60.70,
@@ -797,6 +851,12 @@
     "net_cash_flow_operating": 12.57,
     "net_cash_flow_investing": -1.66,
     "total_dividends_paid": 0.68,
+    "parent_company ": {
+      "cash_and_cash_equivalents": 0.29,
+      "total_liabilities": 5.22,
+      "operating_revenue": 2.78,
+      "net_cash_flow_operating": 0.76
+    },
     "revenue_composition": {
       "total_sales_volume_100m_kwh": 69.86,
       "hydro_sales_volume_100m_kwh": 62.73,
