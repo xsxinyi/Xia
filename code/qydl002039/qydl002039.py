@@ -1,6 +1,10 @@
 import json
 import logging
+import math
 from pathlib import Path
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 DATA_FILE = Path(__file__).parent / "data.json"
 
@@ -8,11 +12,13 @@ logging.basicConfig(format="%(asctime)s %(levelname)s %(funcName)s: %(message)s"
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+
 def load_json(path: Path):
     """从 JSON 文件读取并返回 Python 对象。"""
     with path.open("r", encoding="utf-8") as f:
         return json.load(f)
     
+
 def qydl_extract_generation_output(json_data):
     """提取子公司各年的 generation_output 数据。"""
 
@@ -147,16 +153,111 @@ def qydl_extract_generation_output(json_data):
     }
     return combined
 
+
+def analyze_and_plot_combined(combined: dict, out_dir: Path, show: bool = False):
+    """对 combined 数据绘制折线图并计算每个站点的平均/最大/最小值。
+
+    - combined: dict, 形如 {station: {year_str: value, ...}, ...}
+    - out_dir: Path, 输出文件夹
+    - show: bool, 是否调用 plt.show()
+    返回: stats dict, 每个站点对应 mean/max/min/values
+    """
+
+    # 收集所有年份（数字）并排序
+    years = set()
+    for station, d in combined.items():
+        if isinstance(d, dict):
+            for y in d.keys():
+                try:
+                    years.add(int(y))
+                except Exception:
+                    continue
+    if not years:
+        logger.info("No year data found in combined; skipping analysis")
+        return {}
+
+    sorted_years = sorted(years)
+    year_labels = [str(y) for y in sorted_years]
+
+    stats = {}
+    plot_data = {}
+    for station, d in combined.items():
+        vals = []
+        for y in year_labels:
+            v = None
+            if isinstance(d, dict):
+                v = d.get(y)
+            if isinstance(v, (int, float)):
+                vals.append(float(v))
+            else:
+                vals.append(math.nan)
+
+        numeric = [v for v in vals if not math.isnan(v)]
+        if numeric:
+            avg = sum(numeric) / len(numeric)
+            mx = max(numeric)
+            mn = min(numeric)
+        else:
+            avg = mx = mn = None
+
+        stats[station] = {"mean": avg, "max": mx, "min": mn, "values": vals}
+        plot_data[station] = vals
+
+    # 写出统计 JSON
+    out_stats = out_dir / "generation_output_stats.json"
+    try:
+        with out_stats.open("w", encoding="utf-8") as f:
+            json.dump(stats, f, ensure_ascii=False, indent=2)
+        logger.info(f"Saved generation stats to {out_stats}")
+    except Exception:
+        logger.exception(f"Failed to write stats to {out_stats}")
+
+    # 尝试绘图（若 matplotlib 可用）
+    try:
+        plt.figure(figsize=(10, 6))
+        x = sorted_years
+        for station, vals in plot_data.items():
+            yvals = [v if not math.isnan(v) else None for v in vals]
+            plt.plot(x, yvals, marker="o", label=station)
+
+        plt.xlabel("Year")
+        plt.ylabel("Generation Output")
+        plt.title("Generation Output by Station")
+        plt.grid(True)
+        plt.legend()
+        plt.tight_layout()
+
+        out_png = out_dir / "generation_output_lines.png"
+        plt.savefig(out_png)
+        logger.info(f"Saved plot to {out_png}")
+        if show:
+            plt.show()
+        plt.close()
+    except Exception as e:
+        logger.warning(f"Matplotlib plotting skipped or failed: {e}")
+
+    return stats
+
+
 def qydl_generation_output_analysis(json_data):
     """提取并分析子公司各年的 generation_output 数据。"""
     
     # 提取数据
     combined = qydl_extract_generation_output(json_data)
-    logger.info(combined)
+
+    # logger.info(combined)
+
     out_path_dict = Path(__file__).parent / "subsidiaries_generation_output.json"
     with out_path_dict.open("w", encoding="utf-8") as f:
         json.dump(combined, f, ensure_ascii=False, indent=2)
     logger.info(f"Saved combined data to {out_path_dict}")
+
+    # 生成统计并绘图（若可用）
+    try:
+        analyze_and_plot_combined(combined, out_path_dict.parent)
+    except Exception as e:
+        logger.exception(f"Failed to analyze/plot combined data: {e}")
+
 
 def main():
     # 读取并打印
@@ -165,6 +266,7 @@ def main():
     logger.info("Loaded JSON success.")
 
     qydl_generation_output_analysis(loaded)
+
 
 if __name__ == "__main__":
     main()
