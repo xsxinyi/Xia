@@ -194,7 +194,7 @@ def analyze_and_plot_combined(combined: dict, out_dir: Path, show: bool = False)
 
         numeric = [v for v in vals if not math.isnan(v)]
         if numeric:
-            avg = sum(numeric) / len(numeric)
+            avg = round(sum(numeric) / len(numeric), 3)
             mx = max(numeric)
             mn = min(numeric)
         else:
