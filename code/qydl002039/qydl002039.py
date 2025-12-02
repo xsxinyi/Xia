@@ -233,6 +233,35 @@ def analyze_and_plot_combined(combined: dict, out_dir: Path, show: bool = False)
         if show:
             plt.show()
         plt.close()
+
+        # Also save one plot per station (skip stations with no numeric data)
+        for station, vals in plot_data.items():
+            try:
+                # if there is no numeric (non-NaN) data, skip
+                has_numeric = any((not math.isnan(v)) for v in vals)
+                if not has_numeric:
+                    logger.info(f"No numeric data for station {station}; skipping plot.")
+                    continue
+
+                fig, ax = plt.subplots(figsize=(8, 4))
+                yvals = [v if not math.isnan(v) else None for v in vals]
+                ax.plot(x, yvals, marker="o")
+                ax.set_xlabel("Year")
+                ax.set_ylabel("Generation Output")
+                ax.set_title(f"Generation Output - {station}")
+                ax.grid(True)
+                plt.tight_layout()
+
+                # sanitize station name for filename
+                safe = "".join(c if (c.isalnum() or c in ("-", "_")) else "_" for c in station)
+                out_png_station = out_dir / f"generation_output_{safe}.png"
+                fig.savefig(out_png_station)
+                logger.info(f"Saved plot for {station} to {out_png_station}")
+                if show:
+                    fig.show()
+                plt.close(fig)
+            except Exception as e:
+                logger.warning(f"Failed to plot station {station}: {e}")
     except Exception as e:
         logger.warning(f"Matplotlib plotting skipped or failed: {e}")
 
