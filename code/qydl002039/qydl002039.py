@@ -194,13 +194,20 @@ def analyze_and_plot_combined(combined: dict, out_dir: Path, show: bool = False)
 
         numeric = [v for v in vals if not math.isnan(v)]
         if numeric:
-            avg = round(sum(numeric) / len(numeric), 3)
+            mean_raw = sum(numeric) / len(numeric)
+            avg = round(mean_raw, 3)
             mx = max(numeric)
             mn = min(numeric)
+            # population standard deviation
+            try:
+                var = sum((v - mean_raw) ** 2 for v in numeric) / len(numeric)
+                std = round(math.sqrt(var), 3)
+            except Exception:
+                std = None
         else:
-            avg = mx = mn = None
+            avg = mx = mn = std = None
 
-        stats[station] = {"mean": avg, "max": mx, "min": mn, "values": vals}
+        stats[station] = {"mean": avg, "std": std, "max": mx, "min": mn, "values": vals}
         plot_data[station] = vals
 
     # 写出统计 JSON
