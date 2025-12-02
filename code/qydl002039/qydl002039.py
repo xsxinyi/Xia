@@ -414,7 +414,7 @@ def qydl_operating_revenue_and_generation_output_analysis(json_data):
     except Exception:
         logger.exception(f"Failed to write operating revenue comparison to {out_file}")
 
-def qydl_operating_revenue_and_cash_received_from_sales_and_services_analysis(json_data):
+def qydl_operating_revenue_and_cash_flow_analysis(json_data):
     """
     Extract `operating_revenue` and `cash_received_from_sales_and_services` per year,
     save them to JSON and plot both series in a single chart (PNG).
@@ -430,6 +430,7 @@ def qydl_operating_revenue_and_cash_received_from_sales_and_services_analysis(js
     years = []
     op_vals = []
     cash_vals = []
+    net_cash_vals = []
 
     # collect numeric years and values
     for k, v in json_data.items():
@@ -455,13 +456,21 @@ def qydl_operating_revenue_and_cash_received_from_sales_and_services_analysis(js
         else:
             cashv = None
 
+        net = entry.get("net_cash_flow_operating")
+        if isinstance(net, (int, float)):
+            netv = round(float(net), 3)
+        else:
+            netv = None
+
         op_vals.append(opv)
         cash_vals.append(cashv)
+        net_cash_vals.append(netv)
 
     results = {
         "years": years,
         "operating_revenue": op_vals,
         "cash_received_from_sales_and_services": cash_vals,
+        "net_cash_flow_operating": net_cash_vals,
     }
 
     try:
@@ -481,10 +490,12 @@ def qydl_operating_revenue_and_cash_received_from_sales_and_services_analysis(js
         # matplotlib supports None as gap in data
         y1 = [v if v is not None else None for v in op_vals]
         y2 = [v if v is not None else None for v in cash_vals]
+        y3 = [v if v is not None else None for v in net_cash_vals]
 
         plt.figure(figsize=(10, 6))
         plt.plot(x, y1, marker="o", label="operating_revenue")
         plt.plot(x, y2, marker="o", label="cash_received_from_sales_and_services")
+        plt.plot(x, y3, marker="o", label="net_cash_flow_operating")
         plt.xlabel("Year")
         plt.ylabel("Amount")
         plt.title("Operating Revenue vs Cash Received from Sales and Services")
@@ -522,7 +533,11 @@ def qydl_generation_output_analysis(json_data):
     except Exception:
         logger.exception("Failed to run operating revenue vs generation_output analysis")
 
-    qydl_operating_revenue_and_cash_received_from_sales_and_services_analysis(json_data)
+    # 生成基于 generation_output 与 on_grid_price 的理论营收对比
+    try:
+        qydl_operating_revenue_and_cash_flow_analysis(json_data)
+    except Exception:
+        logger.exception("Failed to run operating revenue vs cash flow analysis")
 
 def main():
     # 读取并打印
