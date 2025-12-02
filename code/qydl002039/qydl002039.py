@@ -294,6 +294,138 @@ def qydl_generation_output_analysis(json_data):
     except Exception as e:
         logger.exception(f"Failed to analyze/plot combined data: {e}")
 
+    # 生成基于 generation_output 与 on_grid_price 的理论营收对比
+    try:
+        qydl_operating_revenue_and_generation_output_analysis(json_data)
+    except Exception:
+        logger.exception("Failed to run operating revenue vs generation_output analysis")
+
+
+def qydl_operating_revenue_and_generation_output_analysis(json_data):
+    """
+    从 `data.json` 中提取各年子公司电站的 `generation_output` 与 `on_grid_price`，
+    计算站点营收 = generation_output * on_grid_price，汇总到子公司与公司层面。
+
+    规则：
+    - 如果某一年任意一个站点的 `on_grid_price` 为 "NA" 或缺失，或该站点的
+      `generation_output` 不是数字，则该年不参与比较（跳过）。
+    - 计算使用原始数值相乘，结果保留 3 位小数。
+
+    输出：将比较结果写入 `operating_revenue_theory_comparison.json`，格式示例：
+    {
+      "2019": {
+        "subsidiary_revenues": {"puding": 12.345, ...},
+        "theoretical_operating_revenue": 123.456,
+        "actual_operating_revenue": 119.00,
+        "difference": 4.456,
+        "pct_diff": 3.74
+      },
+      ...
+    }
+    """
+
+    out_file = Path(__file__).parent / "operating_revenue_theory_comparison.json"
+    results = {}
+
+    def gather_station_values(node):
+        """递归搜集 node 下所有含有 generation_output 与 on_grid_price 的记录。
+        返回列表 of (generation_output, on_grid_price) 或空列表。"""
+        pairs = []
+        if not isinstance(node, dict):
+            return pairs
+        # if this node looks like a station
+        if "generation_output" in node and "on_grid_price" in node:
+            pairs.append((node.get("generation_output"), node.get("on_grid_price")))
+            return pairs
+
+        # otherwise descend into children
+        for v in node.values():
+            if isinstance(v, dict):
+                pairs.extend(gather_station_values(v))
+        return pairs
+
+    # iterate years
+    for year, data in json_data.items():
+        # skip non-year keys
+        try:
+            int(year)
+        except Exception:
+            continue
+
+        subsidiaries = data.get("subsidiaries")
+        if not isinstance(subsidiaries, dict):
+            logger.info(f"Year {year}: no subsidiaries data; skipping")
+            continue
+
+        skip_year = False
+        subsidiary_revenues = {}
+        # for each top-level subsidiary, gather its station pairs and compute revenue
+        for sub_name, sub_node in subsidiaries.items():
+            if not isinstance(sub_node, dict):
+                continue
+            pairs = gather_station_values(sub_node)
+            if not pairs:
+                # no station info under this subsidiary -> treat as zero
+                subsidiary_revenues[sub_name] = 0.0
+                continue
+
+            rev_sum = 0.0
+            for gen, price in pairs:
+                # if price is explicitly "NA" or missing -> skip entire year
+                if price == "NA" or price is None:
+                    logger.info(f"Year {year}: station under {sub_name} missing on_grid_price; skipping year")
+                    skip_year = True
+                    break
+                # require generation_output numeric
+                if not isinstance(gen, (int, float)):
+                    logger.info(f"Year {year}: generation_output for station under {sub_name} is not numeric; skipping year")
+                    skip_year = True
+                    break
+
+                try:
+                    rev_sum += float(gen) * float(price)
+                except Exception:
+                    logger.exception(f"Year {year}: failed to compute revenue for station under {sub_name}")
+                    skip_year = True
+                    break
+
+            if skip_year:
+                break
+
+            subsidiary_revenues[sub_name] = round(rev_sum, 3)
+
+        if skip_year:
+            continue
+
+        theoretical_total = round(sum(subsidiary_revenues.values()), 3)
+        actual_rev = data.get("operating_revenue")
+        if isinstance(actual_rev, (int, float)):
+            actual_rev_val = round(float(actual_rev), 3)
+            diff = round(theoretical_total - actual_rev_val, 3)
+            pct = None
+            try:
+                pct = round((diff / actual_rev_val) * 100, 2) if actual_rev_val != 0 else None
+            except Exception:
+                pct = None
+        else:
+            actual_rev_val = None
+            diff = None
+            pct = None
+
+        results[year] = {
+            "subsidiary_revenues": subsidiary_revenues,
+            "theoretical_operating_revenue": theoretical_total,
+            "actual_operating_revenue": actual_rev_val,
+            "difference": diff,
+            "pct_diff": pct,
+        }
+
+    try:
+        with out_file.open("w", encoding="utf-8") as f:
+            json.dump(results, f, ensure_ascii=False, indent=2)
+        logger.info(f"Saved operating revenue comparison to {out_file}")
+    except Exception:
+        logger.exception(f"Failed to write operating revenue comparison to {out_file}")
 
 def main():
     # 读取并打印
