@@ -275,32 +275,6 @@ def analyze_and_plot_combined(combined: dict, out_dir: Path, show: bool = False)
     return stats
 
 
-def qydl_generation_output_analysis(json_data):
-    """提取并分析子公司各年的 generation_output 数据。"""
-    
-    # 提取数据
-    combined = qydl_extract_generation_output(json_data)
-
-    # logger.info(combined)
-
-    out_path_dict = Path(__file__).parent / "subsidiaries_generation_output.json"
-    with out_path_dict.open("w", encoding="utf-8") as f:
-        json.dump(combined, f, ensure_ascii=False, indent=2)
-    logger.info(f"Saved combined data to {out_path_dict}")
-
-    # 生成统计并绘图（若可用）
-    try:
-        analyze_and_plot_combined(combined, out_path_dict.parent)
-    except Exception as e:
-        logger.exception(f"Failed to analyze/plot combined data: {e}")
-
-    # 生成基于 generation_output 与 on_grid_price 的理论营收对比
-    try:
-        qydl_operating_revenue_and_generation_output_analysis(json_data)
-    except Exception:
-        logger.exception("Failed to run operating revenue vs generation_output analysis")
-
-
 def qydl_operating_revenue_and_generation_output_analysis(json_data):
     """
     从 `data.json` 中提取各年子公司电站的 `generation_output` 与 `on_grid_price`,
@@ -439,6 +413,116 @@ def qydl_operating_revenue_and_generation_output_analysis(json_data):
         logger.info(f"Saved operating revenue comparison to {out_file}")
     except Exception:
         logger.exception(f"Failed to write operating revenue comparison to {out_file}")
+
+def qydl_operating_revenue_and_cash_received_from_sales_and_services_analysis(json_data):
+    """
+    Extract `operating_revenue` and `cash_received_from_sales_and_services` per year,
+    save them to JSON and plot both series in a single chart (PNG).
+
+    Output files (in same folder as this script):
+    - `operating_revenue_vs_cash_received.json`
+    - `operating_revenue_vs_cash_received.png`
+    """
+
+    out_json = Path(__file__).parent / "operating_revenue_vs_cash_received.json"
+    out_png = Path(__file__).parent / "operating_revenue_vs_cash_received.png"
+
+    years = []
+    op_vals = []
+    cash_vals = []
+
+    # collect numeric years and values
+    for k, v in json_data.items():
+        try:
+            y = int(k)
+        except Exception:
+            continue
+        years.append(y)
+    years = sorted(years)
+
+    for y in years:
+        entry = json_data.get(str(y), {})
+        op = entry.get("operating_revenue")
+        cash = entry.get("cash_received_from_sales_and_services")
+
+        if isinstance(op, (int, float)):
+            opv = round(float(op), 3)
+        else:
+            opv = None
+
+        if isinstance(cash, (int, float)):
+            cashv = round(float(cash), 3)
+        else:
+            cashv = None
+
+        op_vals.append(opv)
+        cash_vals.append(cashv)
+
+    results = {
+        "years": years,
+        "operating_revenue": op_vals,
+        "cash_received_from_sales_and_services": cash_vals,
+    }
+
+    try:
+        with out_json.open("w", encoding="utf-8") as f:
+            json.dump(results, f, ensure_ascii=False, indent=2)
+        logger.info(f"Saved operating vs cash data to {out_json}")
+    except Exception:
+        logger.exception(f"Failed to write operating vs cash JSON to {out_json}")
+
+    # plot both series on same chart
+    try:
+        if not years:
+            logger.info("No year data for operating vs cash analysis; skipping plot")
+            return
+
+        x = years
+        # matplotlib supports None as gap in data
+        y1 = [v if v is not None else None for v in op_vals]
+        y2 = [v if v is not None else None for v in cash_vals]
+
+        plt.figure(figsize=(10, 6))
+        plt.plot(x, y1, marker="o", label="operating_revenue")
+        plt.plot(x, y2, marker="o", label="cash_received_from_sales_and_services")
+        plt.xlabel("Year")
+        plt.ylabel("Amount")
+        plt.title("Operating Revenue vs Cash Received from Sales and Services")
+        plt.grid(True)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(out_png)
+        logger.info(f"Saved operating vs cash plot to {out_png}")
+        plt.close()
+    except Exception as e:
+        logger.exception(f"Failed to plot operating vs cash: {e}")
+
+def qydl_generation_output_analysis(json_data):
+    """提取并分析子公司各年的 generation_output 数据。"""
+    
+    # 提取数据
+    combined = qydl_extract_generation_output(json_data)
+
+    # logger.info(combined)
+
+    out_path_dict = Path(__file__).parent / "subsidiaries_generation_output.json"
+    with out_path_dict.open("w", encoding="utf-8") as f:
+        json.dump(combined, f, ensure_ascii=False, indent=2)
+    logger.info(f"Saved combined data to {out_path_dict}")
+
+    # 生成统计并绘图（若可用）
+    try:
+        analyze_and_plot_combined(combined, out_path_dict.parent)
+    except Exception as e:
+        logger.exception(f"Failed to analyze/plot combined data: {e}")
+
+    # 生成基于 generation_output 与 on_grid_price 的理论营收对比
+    try:
+        qydl_operating_revenue_and_generation_output_analysis(json_data)
+    except Exception:
+        logger.exception("Failed to run operating revenue vs generation_output analysis")
+
+    qydl_operating_revenue_and_cash_received_from_sales_and_services_analysis(json_data)
 
 def main():
     # 读取并打印
