@@ -525,6 +525,87 @@ def qydl_operating_revenue_and_cash_flow_analysis(json_data):
     except Exception as e:
         logger.exception(f"Failed to plot operating vs cash: {e}")
 
+
+def qydl_generation_output_history(json_data):
+    """
+    Extract top-level `generation_output` from each year in `data.json`,
+    save to JSON and draw a line chart with a dashed mean line.
+
+    Outputs:
+    - `generation_output_history.json`
+    - `generation_output_history.png`
+    """
+
+    out_json = Path(__file__).parent / "generation_output_history.json"
+    out_png = Path(__file__).parent / "generation_output_history.png"
+
+    years = []
+    values = []
+
+    # collect numeric years
+    for k in json_data.keys():
+        try:
+            y = int(k)
+        except Exception:
+            continue
+        years.append(y)
+    if not years:
+        logger.info("No yearly data found for generation output history; skipping")
+        return
+    years = sorted(years)
+
+    for y in years:
+        entry = json_data.get(str(y), {})
+        go = entry.get("generation_output")
+        if isinstance(go, (int, float)):
+            values.append(round(float(go), 3))
+        else:
+            values.append(None)
+
+    # compute mean over numeric values
+    numeric = [v for v in values if v is not None]
+    mean_val = None
+    if numeric:
+        mean_raw = sum(numeric) / len(numeric)
+        mean_val = round(mean_raw, 3)
+
+    results = {"years": years, "generation_output": values, "mean": mean_val}
+
+    try:
+        with out_json.open("w", encoding="utf-8") as f:
+            json.dump(results, f, ensure_ascii=False, indent=2)
+        logger.info(f"Saved generation output history to {out_json}")
+    except Exception:
+        logger.exception(f"Failed to write generation output history to {out_json}")
+
+    # plot
+    try:
+        x = years
+        yvals = [v if v is not None else None for v in values]
+
+        plt.figure(figsize=(10, 5))
+        plt.plot(x, yvals, marker="o", label="generation_output")
+        if mean_val is not None:
+            plt.axhline(mean_val, color="gray", linestyle="--", linewidth=1)
+            # annotate near mid x and center-align
+            try:
+                x_mid = (x[0] + x[-1]) / 2.0
+                plt.text(x_mid, mean_val, f"mean={mean_val:.3f}", va="center", ha="center", color="gray", fontsize=9)
+            except Exception:
+                pass
+
+        plt.xlabel("Year")
+        plt.ylabel("Generation Output")
+        plt.title("Company Generation Output History")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig(out_png)
+        logger.info(f"Saved generation output history plot to {out_png}")
+        plt.close()
+    except Exception:
+        logger.exception("Failed to plot generation output history")
+
+
 def qydl_generation_output_analysis(json_data):
     """提取并分析子公司各年的 generation_output 数据。"""
     
@@ -543,6 +624,18 @@ def qydl_generation_output_analysis(json_data):
         analyze_and_plot_combined(combined, out_path_dict.parent)
     except Exception as e:
         logger.exception(f"Failed to analyze/plot combined data: {e}")
+
+    # 生成公司层面年度 generation_output 历史图
+    try:
+        qydl_generation_output_history(json_data)
+    except Exception:
+        logger.exception("Failed to run generation output history analysis")
+
+    # 生成基于 generation_output 历年数据，并画成折线图
+    try:
+        qydl_generation_output_history(json_data)
+    except Exception:
+        logger.exception("Failed to run checking generation output history")
 
     # 生成基于 generation_output 与 on_grid_price 的理论营收对比
     try:
