@@ -262,6 +262,23 @@ def analyze_and_plot_combined(combined: dict, out_dir: Path, show: bool = False)
                 # sanitize station name for filename
                 safe = "".join(c if (c.isalnum() or c in ("-", "_")) else "_" for c in station)
                 out_png_station = out_dir / f"generation_output_{safe}.png"
+
+                # draw multi-year mean as dashed horizontal line and annotate
+                try:
+                    numeric_vals = [v for v in vals if not math.isnan(v)]
+                    if numeric_vals:
+                        mean_val = sum(numeric_vals) / len(numeric_vals)
+                        ax.axhline(mean_val, color="gray", linestyle="--", linewidth=1)
+                        # place annotation near the right edge
+                        try:
+                            # place annotation near the middle of the x range and center-align
+                            x_mid = (x[0] + x[-1]) / 2.0
+                            ax.text(x_mid, mean_val, f"mean={mean_val:.3f}", va="center", ha="center", color="gray", fontsize=8)
+                        except Exception:
+                            pass
+                except Exception as e:
+                    logger.debug(f"Failed to compute/plot mean line for {station}: {e}")
+
                 fig.savefig(out_png_station)
                 logger.info(f"Saved plot for {station} to {out_png_station}")
                 if show:
