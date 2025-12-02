@@ -4,27 +4,25 @@
       "puding": 0.883,
       "yinzidu": 2.112,
       "beipanjiang": 13.812,
-      "xiyuan": 1.333,
       "beiyuan": 0.548,
       "pv_power_plant": 3.15
     },
-    "theoretical_operating_revenue": 21.838,
+    "theoretical_operating_revenue": 20.505,
     "actual_operating_revenue": 19.9,
-    "difference": 1.938,
-    "pct_diff": 9.74
+    "difference": 0.605,
+    "pct_diff": 3.04
   },
   "2024": {
     "subsidiary_revenues": {
       "puding": 0.863,
       "yinzidu": 2.219,
       "beipanjiang": 13.78,
-      "xiyuan": 1.467,
       "beiyuan": 0.949,
       "pv_power_plant": 2.752
     },
-    "theoretical_operating_revenue": 22.03,
+    "theoretical_operating_revenue": 20.563,
     "actual_operating_revenue": 19.33,
-    "difference": 2.7,
-    "pct_diff": 13.97
+    "difference": 1.233,
+    "pct_diff": 6.38
   }
 }

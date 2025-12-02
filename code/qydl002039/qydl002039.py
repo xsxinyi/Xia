@@ -303,8 +303,8 @@ def qydl_generation_output_analysis(json_data):
 
 def qydl_operating_revenue_and_generation_output_analysis(json_data):
     """
-    从 `data.json` 中提取各年子公司电站的 `generation_output` 与 `on_grid_price`，
-    计算站点营收 = generation_output * on_grid_price，汇总到子公司与公司层面。
+    从 `data.json` 中提取各年子公司电站的 `generation_output` 与 `on_grid_price`,
+    计算站点营收 = generation_output * on_grid_price, 汇总到子公司与公司层面。
 
     规则：
     - 如果某一年任意一个站点的 `on_grid_price` 为 "NA" 或缺失，或该站点的
@@ -362,6 +362,19 @@ def qydl_operating_revenue_and_generation_output_analysis(json_data):
         # for each top-level subsidiary, gather its station pairs and compute revenue
         for sub_name, sub_node in subsidiaries.items():
             if not isinstance(sub_node, dict):
+                continue
+            # skip top-level subsidiaries where shareholding_ratio < 50%
+            share = sub_node.get("shareholding_ratio")
+            share_val = None
+            if isinstance(share, (int, float)): 
+                share_val = float(share)
+            else:
+                try:
+                    share_val = float(share)
+                except Exception:
+                    share_val = None
+            if share_val is not None and share_val < 50.0:
+                logger.info(f"Year {year}: skipping subsidiary {sub_name} (shareholding_ratio={share_val} < 50%)")
                 continue
             pairs = gather_station_values(sub_node)
             if not pairs:
