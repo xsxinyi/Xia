@@ -1171,10 +1171,35 @@ def qydl_get_market_value(json_data, adj_recognized_value, adj_std_val):
         return (None, None)
 
     try:
-        expected_market_value = float(adj_recognized_value) / expected_rate
+        expected_market_value_raw = float(adj_recognized_value) / expected_rate
     except Exception:
         logger.exception("Failed to compute expected_market_value")
         return (None, None)
+
+    # subtract curr (total_liabilities - cash_and_cash_equivalents) if available
+    curr = json_data.get("curr")
+    curr_total_liabilities = None
+    curr_cash = None
+    curr_net = None
+    try:
+        if isinstance(curr, dict):
+            ctl = curr.get("total_liabilities")
+            cc = curr.get("cash_and_cash_equivalents")
+            if isinstance(ctl, (int, float)) and isinstance(cc, (int, float)):
+                curr_total_liabilities = float(ctl)
+                curr_cash = float(cc)
+                curr_net = curr_total_liabilities - curr_cash
+            else:
+                logger.info("curr.total_liabilities or curr.cash_and_cash_equivalents missing or non-numeric; skipping subtraction")
+        else:
+            logger.info("No 'curr' section found in JSON; skipping subtraction")
+    except Exception:
+        logger.exception("Error while reading 'curr' values; skipping subtraction")
+
+    if curr_net is not None:
+        expected_market_value = expected_market_value_raw - curr_net
+    else:
+        expected_market_value = expected_market_value_raw
 
     # compute per-year parent/net profit ratios
     ratios = []
@@ -1219,6 +1244,10 @@ def qydl_get_market_value(json_data, adj_recognized_value, adj_std_val):
         "expected_rate": expected_rate,
         "adj_recognized_value": adj_recognized_value,
         "adj_std": adj_std_val,
+        "expected_market_value_raw": round(expected_market_value_raw, 3),
+        "curr_total_liabilities": curr_total_liabilities,
+        "curr_cash_and_cash_equivalents": curr_cash,
+        "curr_net": round(curr_net, 3) if isinstance(curr_net, (int, float)) else None,
         "expected_market_value": round(expected_market_value, 3),
         "avg_parent_to_total_profit_ratio": round(avg_ratio, 6),
         "market_value": mv_out,

@@ -2,8 +2,12 @@
   "expected_rate": 0.06,
   "adj_recognized_value": 9.207,
   "adj_std": 2.654,
-  "expected_market_value": 153.45,
+  "expected_market_value_raw": 153.45,
+  "curr_total_liabilities": 80.5,
+  "curr_cash_and_cash_equivalents": 3.09,
+  "curr_net": 77.41,
+  "expected_market_value": 76.04,
   "avg_parent_to_total_profit_ratio": 0.587127,
-  "market_value": 90.095,
-  "std_market_value": 25.971
+  "market_value": 44.645,
+  "std_market_value": 12.869
 }
