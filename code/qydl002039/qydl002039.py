@@ -1034,6 +1034,23 @@ def qydl_total_liabilities_and_cash_and_dividends_analysis(json_data):
             except Exception:
                 pass
 
+        # plot adjusted recognized stats (exclude 2020 & 2021) if available
+        try:
+            adj_mean, adj_std = qydl_get_adj_recognized_value(json_data, exclude_years=(2020, 2021))
+        except Exception:
+            adj_mean = adj_std = None
+
+        if adj_mean is not None:
+            # use a different color to distinguish
+            plt.axhline(adj_mean, color="tab:blue", linestyle="--", linewidth=1)
+            try:
+                x_mid = (x[0] + x[-1]) / 2.0
+                txt2 = f"adj_mean={adj_mean:.3f}  adj_std={adj_std if adj_std is not None else 'NA'}"
+                # place slightly below the adjusted mean line to avoid overlap
+                plt.text(x_mid, adj_mean, txt2, va="bottom", ha="center", color="tab:blue", fontsize=9, bbox=dict(facecolor="white", alpha=0.7, edgecolor="none"))
+            except Exception:
+                pass
+
         plt.xlabel("Year")
         plt.ylabel("Recognized Value")
         plt.title("Recognized Value (认可产生价值) by Year")
