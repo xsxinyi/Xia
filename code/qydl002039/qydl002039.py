@@ -1133,6 +1133,106 @@ def qydl_generation_output_analysis(json_data):
 
     return adj_recongize_value, adj_std
 
+def qydl_get_market_value(json_data, adj_recognized_value, adj_std_val):
+    """
+    Compute market value for consolidated company using:
+
+    - expected_market_value = adj_recognized_value / expected_rate
+      (uses `expected_rate` from top-level of `data.json`)
+    - compute per-year ratio = net_profit_attributable_to_parent / net_profit
+      (skip years with missing/zero net_profit)
+    - average_ratio = mean of per-year ratios
+    - market_value = expected_market_value * average_ratio
+    - std_market_value = market_value * (adj_std_val / adj_recognized_value)
+
+    Returns (market_value, std_market_value), both rounded to 3 decimals when numeric,
+    otherwise (None, None). Also writes `market_value.json` next to the script with
+    details for inspection.
+    """
+
+    out_file = Path(__file__).parent / "market_value.json"
+
+    # validate inputs
+    try:
+        expected_rate = json_data.get("expected_rate")
+        if expected_rate is None:
+            logger.info("expected_rate missing in JSON; cannot compute market value")
+            return (None, None)
+        expected_rate = float(expected_rate)
+        if expected_rate == 0:
+            logger.info("expected_rate is zero; cannot divide")
+            return (None, None)
+    except Exception:
+        logger.exception("Invalid expected_rate in JSON")
+        return (None, None)
+
+    if adj_recognized_value is None:
+        logger.info("adj_recognized_value is None; cannot compute market value")
+        return (None, None)
+
+    try:
+        expected_market_value = float(adj_recognized_value) / expected_rate
+    except Exception:
+        logger.exception("Failed to compute expected_market_value")
+        return (None, None)
+
+    # compute per-year parent/net profit ratios
+    ratios = []
+    for k, v in json_data.items():
+        try:
+            year = int(k)
+        except Exception:
+            continue
+        entry = v if isinstance(v, dict) else {}
+        np_total = entry.get("net_profit")
+        np_parent = entry.get("net_profit_attributable_to_parent")
+        if not isinstance(np_total, (int, float)) or not isinstance(np_parent, (int, float)):
+            continue
+        if np_total == 0:
+            continue
+        try:
+            ratios.append(float(np_parent) / float(np_total))
+        except Exception:
+            continue
+
+    if not ratios:
+        logger.info("No valid parent/net profit ratios found; cannot compute market_value")
+        return (None, None)
+
+    avg_ratio = sum(ratios) / len(ratios)
+
+    market_value = expected_market_value * avg_ratio
+
+    std_market_value = None
+    try:
+        if adj_std_val is not None and adj_recognized_value not in (0, None):
+            std_market_value = market_value * (float(adj_std_val) / float(adj_recognized_value))
+    except Exception:
+        logger.exception("Failed to compute std_market_value")
+        std_market_value = None
+
+    # round numeric outputs
+    mv_out = round(market_value, 3) if isinstance(market_value, (int, float)) else None
+    smv_out = round(std_market_value, 3) if isinstance(std_market_value, (int, float)) else None
+
+    out = {
+        "expected_rate": expected_rate,
+        "adj_recognized_value": adj_recognized_value,
+        "adj_std": adj_std_val,
+        "expected_market_value": round(expected_market_value, 3),
+        "avg_parent_to_total_profit_ratio": round(avg_ratio, 6),
+        "market_value": mv_out,
+        "std_market_value": smv_out,
+    }
+
+    try:
+        with out_file.open("w", encoding="utf-8") as f:
+            json.dump(out, f, ensure_ascii=False, indent=2)
+        logger.info(f"Saved market value details to {out_file}")
+    except Exception:
+        logger.exception(f"Failed to write market value JSON to {out_file}")
+
+    return mv_out, smv_out
 
 data_update = True  # 设置为 True 以启用数据更新分析
 def main():
@@ -1143,6 +1243,7 @@ def main():
 
     if(data_update):
         adj_recognized_value, adj_std_val = qydl_generation_output_analysis(loaded)
+        market_value, std_market_value = qydl_get_market_value(loaded, adj_recognized_value, adj_std_val)
 
 if __name__ == "__main__":
     main()
