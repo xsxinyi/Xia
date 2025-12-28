@@ -526,6 +526,151 @@ def qydl_operating_revenue_and_cash_flow_analysis(json_data):
         logger.exception(f"Failed to plot operating vs cash: {e}")
 
 
+def qydl_total_liabilities_and_cash_and_dividends_analysis(json_data):
+    """
+    Plot yearly `total_liabilities`, `cash_and_cash_equivalents`, `total_dividends_paid` each as
+    separate line charts and compute a derived series "认可产生价值" (recognized value):
+
+    recognized_value(year) = (prev_total_liabilities - total_liabilities(year))
+                              + (cash_and_cash_equivalents(year) - prev_cash_and_cash_equivalents)
+                              + prev_total_dividends_paid
+
+    The recognized series is plotted with its mean and standard deviation annotated centered on the chart.
+
+    Outputs:
+    - `total_liabilities_cash_dividends.json` (years and series)
+    - `total_liabilities.png`, `cash_and_cash_equivalents.png`, `total_dividends_paid.png`
+    - `recognized_value.png`
+    """
+
+    out_dir = Path(__file__).parent
+    out_json = out_dir / "total_liabilities_cash_dividends.json"
+
+    # collect years
+    years = []
+    for k in json_data.keys():
+        try:
+            y = int(k)
+        except Exception:
+            continue
+        years.append(y)
+    if not years:
+        logger.info("No yearly data for liabilities/cash/dividends analysis; skipping")
+        return
+    years = sorted(years)
+
+    liabilities = []
+    cash = []
+    dividends = []
+
+    for y in years:
+        entry = json_data.get(str(y), {})
+        tl = entry.get("total_liabilities")
+        cca = entry.get("cash_and_cash_equivalents")
+        div = entry.get("total_dividends_paid")
+
+        liabilities.append(round(float(tl), 3) if isinstance(tl, (int, float)) else None)
+        cash.append(round(float(cca), 3) if isinstance(cca, (int, float)) else None)
+        dividends.append(round(float(div), 3) if isinstance(div, (int, float)) else None)
+
+    # compute recognized value series
+    recognized = []
+    for i in range(len(years)):
+        if i == 0:
+            recognized.append(None)
+            continue
+        prev_liab = liabilities[i-1]
+        curr_liab = liabilities[i]
+        prev_cash = cash[i-1]
+        curr_cash = cash[i]
+        prev_div = dividends[i-1]
+
+        if prev_liab is None or curr_liab is None or prev_cash is None or curr_cash is None:
+            recognized.append(None)
+            continue
+
+        prev_div_val = prev_div if isinstance(prev_div, (int, float)) else 0.0
+
+        val = (prev_liab - curr_liab) + (curr_cash - prev_cash) + float(prev_div_val)
+        recognized.append(round(val, 3))
+
+    # stats for recognized (exclude None)
+    numeric_recog = [v for v in recognized if v is not None]
+    recog_mean = None
+    recog_std = None
+    if numeric_recog:
+        mean_raw = sum(numeric_recog) / len(numeric_recog)
+        recog_mean = round(mean_raw, 3)
+        try:
+            var = sum((v - mean_raw) ** 2 for v in numeric_recog) / len(numeric_recog)
+            recog_std = round(math.sqrt(var), 3)
+        except Exception:
+            recog_std = None
+
+    results = {
+        "years": years,
+        "total_liabilities": liabilities,
+        "cash_and_cash_equivalents": cash,
+        "total_dividends_paid": dividends,
+        "recognized_value": recognized,
+        "recognized_mean": recog_mean,
+        "recognized_std": recog_std,
+    }
+
+    try:
+        with out_json.open("w", encoding="utf-8") as f:
+            json.dump(results, f, ensure_ascii=False, indent=2)
+        logger.info(f"Saved liabilities/cash/dividends data to {out_json}")
+    except Exception:
+        logger.exception(f"Failed to write liabilities/cash/dividends JSON to {out_json}")
+
+    # helper to plot single series
+    def _plot_series(x, y, ylabel, title, out_png):
+        try:
+            plt.figure(figsize=(10, 5))
+            yvals = [v if v is not None else None for v in y]
+            plt.plot(x, yvals, marker="o")
+            plt.xlabel("Year")
+            plt.ylabel(ylabel)
+            plt.title(title)
+            plt.grid(True)
+            plt.tight_layout()
+            plt.savefig(out_png)
+            logger.info(f"Saved plot to {out_png}")
+            plt.close()
+        except Exception:
+            logger.exception(f"Failed to plot {title}")
+
+    # create individual plots
+    _plot_series(years, liabilities, "Total Liabilities", "Total Liabilities by Year", out_dir / "total_liabilities.png")
+    _plot_series(years, cash, "Cash and Cash Equivalents", "Cash and Cash Equivalents by Year", out_dir / "cash_and_cash_equivalents.png")
+    _plot_series(years, dividends, "Total Dividends Paid", "Total Dividends Paid by Year", out_dir / "total_dividends_paid.png")
+
+    # plot recognized value with mean/std annotated
+    try:
+        plt.figure(figsize=(10, 5))
+        yvals = [v if v is not None else None for v in recognized]
+        plt.plot(years, yvals, marker="o", label="recognized_value")
+        if recog_mean is not None:
+            plt.axhline(recog_mean, color="gray", linestyle="--", linewidth=1)
+            try:
+                x_mid = (years[0] + years[-1]) / 2.0
+                plt.text(x_mid, recog_mean, f"mean={recog_mean:.3f}  std={recog_std if recog_std is not None else 'N/A'}", va="center", ha="center", color="gray", fontsize=9)
+            except Exception:
+                pass
+        plt.xlabel("Year")
+        plt.ylabel("Recognized Value")
+        plt.title("Recognized Value by Year")
+        plt.grid(True)
+        plt.tight_layout()
+        out_rec_png = out_dir / "recognized_value.png"
+        plt.savefig(out_rec_png)
+        logger.info(f"Saved recognized value plot to {out_rec_png}")
+        plt.close()
+    except Exception:
+        logger.exception("Failed to plot recognized value")
+
+
 def qydl_generation_output_history(json_data):
     """
     Extract top-level `generation_output` from each year in `data.json`,
@@ -606,6 +751,7 @@ def qydl_generation_output_history(json_data):
         logger.exception("Failed to plot generation output history")
 
 
+
 def qydl_generation_output_analysis(json_data):
     """提取并分析子公司各年的 generation_output 数据。"""
     
@@ -649,14 +795,21 @@ def qydl_generation_output_analysis(json_data):
     except Exception:
         logger.exception("Failed to run operating revenue vs cash flow analysis")
 
+    # 生成 total_liabilities / cash / dividends 的分析图
+    try:
+        qydl_total_liabilities_and_cash_and_dividends_analysis(json_data)
+    except Exception:
+        logger.exception("Failed to run total liabilities/cash/dividends analysis")
+
+data_update = True  # 设置为 True 以启用数据更新分析
 def main():
     # 读取并打印
     loaded = load_json(DATA_FILE)
 
     logger.info("Loaded JSON success.")
 
-    qydl_generation_output_analysis(loaded)
-
+    if(data_update):
+        qydl_generation_output_analysis(loaded)
 
 if __name__ == "__main__":
     main()
