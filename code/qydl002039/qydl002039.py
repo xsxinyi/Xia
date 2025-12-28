@@ -617,6 +617,15 @@ def qydl_total_liabilities_and_cash_and_dividends_analysis(json_data):
         "recognized_std": recog_std,
     }
 
+    # compute adjusted recognized stats (exclude 2020 and 2021)
+    try:
+        adj_mean, adj_std = qydl_get_adj_recognized_value(json_data, exclude_years=(2020, 2021))
+        results["recognized_adj_mean"] = adj_mean
+        results["recognized_adj_std"] = adj_std
+    except Exception:
+        results["recognized_adj_mean"] = None
+        results["recognized_adj_std"] = None
+
     try:
         with out_json.open("w", encoding="utf-8") as f:
             json.dump(results, f, ensure_ascii=False, indent=2)
@@ -749,6 +758,92 @@ def qydl_generation_output_history(json_data):
         plt.close()
     except Exception:
         logger.exception("Failed to plot generation output history")
+
+
+def qydl_get_adj_recognized_value(json_data, exclude_years=(2020, 2021)):
+    """
+    Compute mean and population std of the "recognized value" series excluding
+    the specified years (defaults to 2020 and 2021).
+
+    recognized_value is computed the same way as in
+    `qydl_total_liabilities_and_cash_and_dividends_analysis`:
+      (prev_total_liabilities - curr_total_liabilities)
+      + (curr_cash - prev_cash)
+      + prev_total_dividends_paid
+
+    Returns (mean, std) both rounded to 3 decimals, or (None, None) if no
+    numeric values remain after exclusion.
+    """
+
+    # collect years and numeric series
+    years = []
+    for k in json_data.keys():
+        try:
+            y = int(k)
+        except Exception:
+            continue
+        years.append(y)
+    if not years:
+        return (None, None)
+    years = sorted(years)
+
+    liabilities = []
+    cash = []
+    dividends = []
+    for y in years:
+        entry = json_data.get(str(y), {})
+        tl = entry.get("total_liabilities")
+        ca = entry.get("cash_and_cash_equivalents")
+        td = entry.get("total_dividends_paid")
+
+        liabilities.append(float(tl) if isinstance(tl, (int, float)) else None)
+        cash.append(float(ca) if isinstance(ca, (int, float)) else None)
+        dividends.append(float(td) if isinstance(td, (int, float)) else None)
+
+    recognized = []
+    for i in range(len(years)):
+        if i == 0:
+            recognized.append(None)
+            continue
+        prev_i = i - 1
+        prev_tl = liabilities[prev_i]
+        curr_tl = liabilities[i]
+        prev_cash = cash[prev_i]
+        curr_cash = cash[i]
+        prev_div = dividends[prev_i]
+
+        if any(v is None for v in (prev_tl, curr_tl, prev_cash, curr_cash, prev_div)):
+            recognized.append(None)
+            continue
+
+        val = (prev_tl - curr_tl) + (curr_cash - prev_cash) + prev_div
+        try:
+            recognized.append(float(val))
+        except Exception:
+            recognized.append(None)
+
+    # filter out excluded years and None
+    filtered = []
+    for y, v in zip(years, recognized):
+        if y in exclude_years:
+            continue
+        if v is None:
+            continue
+        filtered.append(v)
+
+    if not filtered:
+        return (None, None)
+
+    mean_raw = sum(filtered) / len(filtered)
+    try:
+        var = sum((v - mean_raw) ** 2 for v in filtered) / len(filtered)
+        std_raw = math.sqrt(var)
+    except Exception:
+        std_raw = None
+
+    mean = round(mean_raw, 3)
+    std = round(std_raw, 3) if std_raw is not None else None
+    return (mean, std)
 
 
 def qydl_total_liabilities_and_cash_and_dividends_analysis(json_data):
@@ -1007,6 +1102,21 @@ def qydl_generation_output_analysis(json_data):
     except Exception:
         logger.exception("Failed to run total liabilities/cash/dividends analysis")
 
+    # 生成修正后的认可产生价值（返回供外部调用）
+    adj_recongize_value = None
+    adj_std = None
+    try:
+        res = qydl_get_adj_recognized_value(json_data)
+        if isinstance(res, tuple) and len(res) == 2:
+            adj_recongize_value, adj_std = res
+        else:
+            logger.info("qydl_get_adj_recognized_value returned unexpected result")
+    except Exception:
+        logger.exception("Failed to get adj recognized value")
+
+    return adj_recongize_value, adj_std
+
+
 data_update = True  # 设置为 True 以启用数据更新分析
 def main():
     # 读取并打印
@@ -1015,7 +1125,7 @@ def main():
     logger.info("Loaded JSON success.")
 
     if(data_update):
-        qydl_generation_output_analysis(loaded)
+        adj_recognized_value, adj_std_val = qydl_generation_output_analysis(loaded)
 
 if __name__ == "__main__":
     main()
