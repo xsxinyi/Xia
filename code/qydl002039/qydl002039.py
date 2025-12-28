@@ -926,6 +926,9 @@ def qydl_total_liabilities_and_cash_and_dividends_analysis(json_data):
         yvals = [v if v is not None else None for v in recognized]
         plt.figure(figsize=(10, 5))
         plt.plot(x, yvals, marker="o", label="recognized_value")
+        ax = plt.gca()
+        # annotate each point's value
+        annotate_points(ax, x, yvals, fmt="{:.3f}")
         if recog_mean is not None:
             plt.axhline(recog_mean, color="gray", linestyle="--", linewidth=1)
             # center annotate with mean and std
