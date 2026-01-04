@@ -528,25 +528,29 @@ def qydl_operating_revenue_and_cash_flow_analysis(json_data):
 
 def qydl_total_liabilities_and_cash_and_dividends_analysis(json_data):
     """
-    Plot yearly `total_liabilities`, `cash_and_cash_equivalents`, `total_dividends_paid` each as
-    separate line charts and compute a derived series "认可产生价值" (recognized value):
+    Plot yearly `total_liabilities`, `cash_and_cash_equivalents`, `total_dividends_paid`.
 
-    recognized_value(year) = (prev_total_liabilities - total_liabilities(year))
-                              + (cash_and_cash_equivalents(year) - prev_cash_and_cash_equivalents)
-                              + prev_total_dividends_paid
+    Also compute "认可产生价值" for each year as:
+      (prev_total_liabilities - curr_total_liabilities)
+      + (curr_cash - prev_cash)
+      + prev_total_dividends_paid
+      + curr_financial_expenses  # include current year's financial_expenses
 
-    The recognized series is plotted with its mean and standard deviation annotated centered on the chart.
-
-    Outputs:
-    - `total_liabilities_cash_dividends.json` (years and series)
-    - `total_liabilities.png`, `cash_and_cash_equivalents.png`, `total_dividends_paid.png`
-    - `recognized_value.png`
+    Outputs (in script folder):
+    - `liabilities_cash_dividends.json` (years + the three series + recognized_value + mean/std)
+    - `total_liabilities.png` (annotated points)
+    - `cash_and_cash_equivalents.png`
+    - `total_dividends_paid.png` (annotated points)
+    - `recognized_value.png` (mean & std centered on plot)
     """
 
     out_dir = Path(__file__).parent
-    out_json = out_dir / "total_liabilities_cash_dividends.json"
+    out_json = out_dir / "liabilities_cash_dividends.json"
+    png_liabilities = out_dir / "total_liabilities.png"
+    png_cash = out_dir / "cash_and_cash_equivalents.png"
+    png_dividends = out_dir / "total_dividends_paid.png"
+    png_recognized = out_dir / "recognized_value.png"
 
-    # collect years
     years = []
     for k in json_data.keys():
         try:
@@ -555,7 +559,7 @@ def qydl_total_liabilities_and_cash_and_dividends_analysis(json_data):
             continue
         years.append(y)
     if not years:
-        logger.info("No yearly data for liabilities/cash/dividends analysis; skipping")
+        logger.info("No yearly data found for liabilities/cash/dividends analysis; skipping")
         return
     years = sorted(years)
 
@@ -566,43 +570,55 @@ def qydl_total_liabilities_and_cash_and_dividends_analysis(json_data):
     for y in years:
         entry = json_data.get(str(y), {})
         tl = entry.get("total_liabilities")
-        cca = entry.get("cash_and_cash_equivalents")
-        div = entry.get("total_dividends_paid")
+        ca = entry.get("cash_and_cash_equivalents")
+        td = entry.get("total_dividends_paid")
 
         liabilities.append(round(float(tl), 3) if isinstance(tl, (int, float)) else None)
-        cash.append(round(float(cca), 3) if isinstance(cca, (int, float)) else None)
-        dividends.append(round(float(div), 3) if isinstance(div, (int, float)) else None)
+        cash.append(round(float(ca), 3) if isinstance(ca, (int, float)) else None)
+        dividends.append(round(float(td), 3) if isinstance(td, (int, float)) else None)
 
-    # compute recognized value series
+    # compute recognized value series including current year's financial_expenses
     recognized = []
     for i in range(len(years)):
         if i == 0:
+            # cannot compute for first year (no previous) -> None
             recognized.append(None)
             continue
-        prev_liab = liabilities[i-1]
-        curr_liab = liabilities[i]
-        prev_cash = cash[i-1]
+        prev_i = i - 1
+        prev_tl = liabilities[prev_i]
+        curr_tl = liabilities[i]
+        prev_cash = cash[prev_i]
         curr_cash = cash[i]
-        prev_div = dividends[i-1]
+        prev_div = dividends[prev_i]
+        # include current year's financial_expenses in recognized value
+        curr_entry = json_data.get(str(years[i]), {})
+        curr_fin = curr_entry.get("financial_expenses")
 
-        if prev_liab is None or curr_liab is None or prev_cash is None or curr_cash is None:
+        if any(v is None for v in (prev_tl, curr_tl, prev_cash, curr_cash, prev_div, curr_fin)):
             recognized.append(None)
             continue
 
-        prev_div_val = prev_div if isinstance(prev_div, (int, float)) else 0.0
+        try:
+            fin_val = float(curr_fin)
+        except Exception:
+            recognized.append(None)
+            continue
 
-        val = (prev_liab - curr_liab) + (curr_cash - prev_cash) + float(prev_div_val)
-        recognized.append(round(val, 3))
+        val = (prev_tl - curr_tl) + (curr_cash - prev_cash) + prev_div + fin_val
+        try:
+            recognized.append(round(float(val), 3))
+        except Exception:
+            recognized.append(None)
 
-    # stats for recognized (exclude None)
+    # compute mean & std for recognized (population std)
     numeric_recog = [v for v in recognized if v is not None]
     recog_mean = None
     recog_std = None
     if numeric_recog:
-        mean_raw = sum(numeric_recog) / len(numeric_recog)
-        recog_mean = round(mean_raw, 3)
+        m_raw = sum(numeric_recog) / len(numeric_recog)
+        recog_mean = round(m_raw, 3)
         try:
-            var = sum((v - mean_raw) ** 2 for v in numeric_recog) / len(numeric_recog)
+            var = sum((v - m_raw) ** 2 for v in numeric_recog) / len(numeric_recog)
             recog_std = round(math.sqrt(var), 3)
         except Exception:
             recog_std = None
@@ -617,64 +633,121 @@ def qydl_total_liabilities_and_cash_and_dividends_analysis(json_data):
         "recognized_std": recog_std,
     }
 
-    # compute adjusted recognized stats (exclude 2020 and 2021)
-    try:
-        adj_mean, adj_std = qydl_get_adj_recognized_value(json_data, exclude_years=(2020, 2021))
-        results["recognized_adj_mean"] = adj_mean
-        results["recognized_adj_std"] = adj_std
-    except Exception:
-        results["recognized_adj_mean"] = None
-        results["recognized_adj_std"] = None
-
     try:
         with out_json.open("w", encoding="utf-8") as f:
             json.dump(results, f, ensure_ascii=False, indent=2)
         logger.info(f"Saved liabilities/cash/dividends data to {out_json}")
     except Exception:
-        logger.exception(f"Failed to write liabilities/cash/dividends JSON to {out_json}")
+        logger.exception("Failed to write liabilities/cash/dividends JSON to {out_json}")
 
-    # helper to plot single series
-    def _plot_series(x, y, ylabel, title, out_png):
-        try:
-            plt.figure(figsize=(10, 5))
-            yvals = [v if v is not None else None for v in y]
-            plt.plot(x, yvals, marker="o")
-            plt.xlabel("Year")
-            plt.ylabel(ylabel)
-            plt.title(title)
-            plt.grid(True)
-            plt.tight_layout()
-            plt.savefig(out_png)
-            logger.info(f"Saved plot to {out_png}")
-            plt.close()
-        except Exception:
-            logger.exception(f"Failed to plot {title}")
-
-    # create individual plots
-    _plot_series(years, liabilities, "Total Liabilities", "Total Liabilities by Year", out_dir / "total_liabilities.png")
-    _plot_series(years, cash, "Cash and Cash Equivalents", "Cash and Cash Equivalents by Year", out_dir / "cash_and_cash_equivalents.png")
-    _plot_series(years, dividends, "Total Dividends Paid", "Total Dividends Paid by Year", out_dir / "total_dividends_paid.png")
-
-    # plot recognized value with mean/std annotated
-    try:
-        plt.figure(figsize=(10, 5))
-        yvals = [v if v is not None else None for v in recognized]
-        plt.plot(years, yvals, marker="o", label="recognized_value")
-        if recog_mean is not None:
-            plt.axhline(recog_mean, color="gray", linestyle="--", linewidth=1)
+    # helper to annotate points on a given axis
+    def annotate_points(ax, x_vals, y_vals, fmt="{:.3f}"):
+        for xi, yi in zip(x_vals, y_vals):
+            if yi is None:
+                continue
             try:
-                x_mid = (years[0] + years[-1]) / 2.0
-                plt.text(x_mid, recog_mean, f"mean={recog_mean:.3f}  std={recog_std if recog_std is not None else 'N/A'}", va="center", ha="center", color="gray", fontsize=9)
+                ax.text(xi, yi, fmt.format(yi), fontsize=8, color="black", va="bottom", ha="center")
             except Exception:
                 pass
+
+    # plot total_liabilities with point annotations
+    try:
+        x = years
+        yvals = [v if v is not None else None for v in liabilities]
+        plt.figure(figsize=(10, 5))
+        plt.plot(x, yvals, marker="o", label="total_liabilities")
+        ax = plt.gca()
+        annotate_points(ax, x, yvals)
         plt.xlabel("Year")
-        plt.ylabel("Recognized Value")
-        plt.title("Recognized Value by Year")
+        plt.ylabel("Total Liabilities")
+        plt.title("Total Liabilities by Year")
         plt.grid(True)
         plt.tight_layout()
-        out_rec_png = out_dir / "recognized_value.png"
-        plt.savefig(out_rec_png)
-        logger.info(f"Saved recognized value plot to {out_rec_png}")
+        plt.savefig(png_liabilities)
+        logger.info(f"Saved total liabilities plot to {png_liabilities}")
+        plt.close()
+    except Exception:
+        logger.exception("Failed to plot total liabilities")
+
+    # plot cash (no point labels requested but we generate the plot)
+    try:
+        x = years
+        yvals = [v if v is not None else None for v in cash]
+        plt.figure(figsize=(10, 5))
+        plt.plot(x, yvals, marker="o", label="cash_and_cash_equivalents")
+        plt.xlabel("Year")
+        plt.ylabel("Cash and Cash Equivalents")
+        plt.title("Cash and Cash Equivalents by Year")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig(png_cash)
+        logger.info(f"Saved cash and cash equivalents plot to {png_cash}")
+        plt.close()
+    except Exception:
+        logger.exception("Failed to plot cash and cash equivalents")
+
+    # plot dividends with point annotations
+    try:
+        x = years
+        yvals = [v if v is not None else None for v in dividends]
+        plt.figure(figsize=(10, 5))
+        plt.plot(x, yvals, marker="o", label="total_dividends_paid")
+        ax = plt.gca()
+        annotate_points(ax, x, yvals)
+        plt.xlabel("Year")
+        plt.ylabel("Total Dividends Paid")
+        plt.title("Total Dividends Paid by Year")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig(png_dividends)
+        logger.info(f"Saved total dividends plot to {png_dividends}")
+        plt.close()
+    except Exception:
+        logger.exception("Failed to plot total dividends")
+
+    # plot recognized value with mean & std displayed in the middle
+    try:
+        x = years
+        yvals = [v if v is not None else None for v in recognized]
+        plt.figure(figsize=(10, 5))
+        plt.plot(x, yvals, marker="o", label="recognized_value")
+        ax = plt.gca()
+        # annotate each point's value
+        annotate_points(ax, x, yvals, fmt="{:.3f}")
+        if recog_mean is not None:
+            plt.axhline(recog_mean, color="gray", linestyle="--", linewidth=1)
+            # center annotate with mean and std
+            try:
+                x_mid = (x[0] + x[-1]) / 2.0
+                txt = f"mean={recog_mean:.3f}  std={recog_std if recog_std is not None else 'NA'}"
+                plt.text(x_mid, recog_mean, txt, va="center", ha="center", color="gray", fontsize=9, bbox=dict(facecolor="white", alpha=0.7, edgecolor="none"))
+            except Exception:
+                pass
+
+        # plot adjusted recognized stats (exclude 2020 & 2021) if available
+        try:
+            adj_mean, adj_std = qydl_get_adj_recognized_value(json_data, exclude_years=(2020, 2021))
+        except Exception:
+            adj_mean = adj_std = None
+
+        if adj_mean is not None:
+            # use a different color to distinguish
+            plt.axhline(adj_mean, color="tab:blue", linestyle="--", linewidth=1)
+            try:
+                x_mid = (x[0] + x[-1]) / 2.0
+                txt2 = f"adj_mean={adj_mean:.3f}  adj_std={adj_std if adj_std is not None else 'NA'}"
+                # place slightly below the adjusted mean line to avoid overlap
+                plt.text(x_mid, adj_mean, txt2, va="bottom", ha="center", color="tab:blue", fontsize=9, bbox=dict(facecolor="white", alpha=0.7, edgecolor="none"))
+            except Exception:
+                pass
+
+        plt.xlabel("Year")
+        plt.ylabel("Recognized Value")
+        plt.title("Recognized Value (认可产生价值) by Year")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig(png_recognized)
+        logger.info(f"Saved recognized value plot to {png_recognized}")
         plt.close()
     except Exception:
         logger.exception("Failed to plot recognized value")
@@ -765,11 +838,12 @@ def qydl_get_adj_recognized_value(json_data, exclude_years=(2020, 2021)):
     Compute mean and population std of the "recognized value" series excluding
     the specified years (defaults to 2020 and 2021).
 
-    recognized_value is computed the same way as in
-    `qydl_total_liabilities_and_cash_and_dividends_analysis`:
-      (prev_total_liabilities - curr_total_liabilities)
-      + (curr_cash - prev_cash)
-      + prev_total_dividends_paid
+        recognized_value is computed the same way as in
+        `qydl_total_liabilities_and_cash_and_dividends_analysis`:
+            (prev_total_liabilities - curr_total_liabilities)
+            + (curr_cash - prev_cash)
+            + prev_total_dividends_paid
+            + curr_financial_expenses
 
     Returns (mean, std) both rounded to 3 decimals, or (None, None) if no
     numeric values remain after exclusion.
@@ -811,12 +885,21 @@ def qydl_get_adj_recognized_value(json_data, exclude_years=(2020, 2021)):
         prev_cash = cash[prev_i]
         curr_cash = cash[i]
         prev_div = dividends[prev_i]
+        # include current year's financial_expenses in recognized value
+        curr_entry = json_data.get(str(years[i]), {})
+        curr_fin = curr_entry.get("financial_expenses")
 
-        if any(v is None for v in (prev_tl, curr_tl, prev_cash, curr_cash, prev_div)):
+        if any(v is None for v in (prev_tl, curr_tl, prev_cash, curr_cash, prev_div, curr_fin)):
             recognized.append(None)
             continue
 
-        val = (prev_tl - curr_tl) + (curr_cash - prev_cash) + prev_div
+        try:
+            fin_val = float(curr_fin)
+        except Exception:
+            recognized.append(None)
+            continue
+
+        val = (prev_tl - curr_tl) + (curr_cash - prev_cash) + prev_div + fin_val
         try:
             recognized.append(float(val))
         except Exception:
@@ -909,12 +992,21 @@ def qydl_total_liabilities_and_cash_and_dividends_analysis(json_data):
         prev_cash = cash[prev_i]
         curr_cash = cash[i]
         prev_div = dividends[prev_i]
+        # include current year's financial_expenses in recognized value
+        curr_entry = json_data.get(str(years[i]), {})
+        curr_fin = curr_entry.get("financial_expenses")
 
-        if any(v is None for v in (prev_tl, curr_tl, prev_cash, curr_cash, prev_div)):
+        if any(v is None for v in (prev_tl, curr_tl, prev_cash, curr_cash, prev_div, curr_fin)):
             recognized.append(None)
             continue
 
-        val = (prev_tl - curr_tl) + (curr_cash - prev_cash) + prev_div
+        try:
+            fin_val = float(curr_fin)
+        except Exception:
+            recognized.append(None)
+            continue
+
+        val = (prev_tl - curr_tl) + (curr_cash - prev_cash) + prev_div + fin_val
         try:
             recognized.append(round(float(val), 3))
         except Exception:
