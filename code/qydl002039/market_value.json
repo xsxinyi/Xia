@@ -9,5 +9,7 @@
   "expected_market_value": 154.073,
   "avg_parent_to_total_profit_ratio": 0.587127,
   "market_value": 90.461,
-  "std_market_value": 18.829
+  "std_market_value": 18.829,
+  "expected_stock_value": 21.157498,
+  "std_stock_value": 4.403826
 }

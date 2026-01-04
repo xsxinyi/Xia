@@ -1273,14 +1273,17 @@ def qydl_get_market_value(json_data, adj_recognized_value, adj_std_val):
     curr_total_liabilities = None
     curr_cash = None
     curr_net = None
+    curr_shares = None
     try:
         if isinstance(curr, dict):
             ctl = curr.get("total_liabilities")
             cc = curr.get("cash_and_cash_equivalents")
-            if isinstance(ctl, (int, float)) and isinstance(cc, (int, float)):
+            cs = curr.get("total_shares_outstanding")
+            if isinstance(ctl, (int, float)) and isinstance(cc, (int, float)) and isinstance(cs, (int, float)):
                 curr_total_liabilities = float(ctl)
                 curr_cash = float(cc)
                 curr_net = curr_total_liabilities - curr_cash
+                curr_shares = float(cs)
             else:
                 logger.info("curr.total_liabilities or curr.cash_and_cash_equivalents missing or non-numeric; skipping subtraction")
         else:
@@ -1332,6 +1335,10 @@ def qydl_get_market_value(json_data, adj_recognized_value, adj_std_val):
     mv_out = round(market_value, 3) if isinstance(market_value, (int, float)) else None
     smv_out = round(std_market_value, 3) if isinstance(std_market_value, (int, float)) else None
 
+    expected_stock_value = mv_out / curr_shares if curr_shares not in (0, None) else None
+    std_stock_value = smv_out / curr_shares if curr_shares not in (0, None) else None
+
+
     out = {
         "expected_rate": expected_rate,
         "adj_recognized_value": adj_recognized_value,
@@ -1344,6 +1351,8 @@ def qydl_get_market_value(json_data, adj_recognized_value, adj_std_val):
         "avg_parent_to_total_profit_ratio": round(avg_ratio, 6),
         "market_value": mv_out,
         "std_market_value": smv_out,
+        "expected_stock_value": round(expected_stock_value, 6),
+        "std_stock_value": round(std_stock_value, 6),
     }
 
     try:

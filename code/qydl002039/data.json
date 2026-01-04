@@ -948,6 +948,7 @@
   },
   "curr": {
     "cash_and_cash_equivalents": 3.09,
-    "total_liabilities": 80.50
+    "total_liabilities": 80.50,
+    "total_shares_outstanding": 4.2756
   }
 }
